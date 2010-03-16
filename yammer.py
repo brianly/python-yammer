@@ -11,6 +11,13 @@ class Endpoint(object):
     def _get(self, endpoint, **params):
         return self.yammer._apicall(endpoint, 'GET', **params)
 
+    def _post(self, endpoint, **params):
+        return self.yammer._apicall(endpoint, 'POST', **params)
+
+    def _delete(self, endpoint, **params):
+        return self.yammer._apicall(endpoint, 'DELETE', **params)
+
+
 class MessageEndpoint(Endpoint):
 
     def all(self, older_than=None, newer_than=None, threaded=None):
@@ -28,6 +35,39 @@ class MessageEndpoint(Endpoint):
     def following(self, older_than=None, newer_than=None, threaded=None):
         return self._get('messages/following', older_than=older_than,
                          newer_than=newer_than, threaded=threaded)
+
+    def from_user(self, id, older_than=None, newer_than=None, threaded=None):
+        return self._get('messages/from_user/%s' % id, older_than=older_than,
+                         newer_than=newer_than, threaded=threaded)
+
+    def from_bot(self, id, older_than=None, newer_than=None, threaded=None):
+        return self._get('messages/from_bot/%s' % id, older_than=older_than,
+                         newer_than=newer_than, threaded=threaded)
+
+    def tagged_with(self, id, older_than=None, newer_than=None, threaded=None):
+        return self._get('messages/tagged_with/%s' % id, older_than=older_than,
+                         newer_than=newer_than, threaded=threaded)
+
+    def in_group(self, id, older_than=None, newer_than=None, threaded=None):
+        return self._get('messages/in_group/%s' % id, older_than=older_than,
+                         newer_than=newer_than, threaded=threaded)
+
+    def favorites_of(self, id, older_than=None, newer_than=None, threaded=None):
+        return self._get('messages/favorites_of/%s' % id, older_than=older_than,
+                         newer_than=newer_than, threaded=threaded)
+
+    def in_thread(self, id, older_than=None, newer_than=None, threaded=None):
+        return self._get('messages/in_thread/%s' % id, older_than=older_than,
+                         newer_than=newer_than, threaded=threaded)
+
+    def post(self, body, group_id=None, replied_to_id=None, direct_to_id=None):
+        # doesn't support attachments
+        return self._post('messages/', group_id=group_id,
+                          replied_to_id=replied_to_id, body=body,
+                          direct_to_id=direct_to_id)
+
+    def delete(self, message_id):
+        return self._delete('messages/%s' % message_id)
 
 class Yammer(object):
     request_token_url = 'https://www.yammer.com/oauth/request_token'
@@ -74,7 +114,12 @@ class Yammer(object):
 
     # requests
     def _apicall(self, endpoint, method, **params):
-        url = '%s%s.json' % (self.base_url, endpoint)
+        if method == 'GET':
+            suffix = '.json'
+        else:
+            suffix = ''
+        url = '%s%s%s' % (self.base_url, endpoint, suffix)
+        print url
         body = None
         cleaned_params = dict([(k,v) for k,v in params.iteritems() if v])
 
