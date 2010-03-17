@@ -69,6 +69,22 @@ class MessageEndpoint(Endpoint):
     def delete(self, message_id):
         return self._delete('messages/%s' % message_id)
 
+class GroupEndpoint(Endpoint):
+
+    def all(self, page=1, letter=None, sort_by=None, reverse=None):
+        return self._get('groups', page=page, letter=letter, sort_by=sort_by,
+                         reverse=reverse)
+
+    def get(self, id):
+        return self._get('groups/%s' % id)
+
+    def create(self, name, private=None):
+        return self._post('groups', name=name, private=private)
+
+    def update(self, id, name, private):
+        return self._post('groups/%s' % id, name=name, private=private)
+
+
 class Yammer(object):
     request_token_url = 'https://www.yammer.com/oauth/request_token'
     access_token_url = 'https://www.yammer.com/oauth/access_token'
@@ -85,6 +101,7 @@ class Yammer(object):
 
         # connect endpoints
         self.messages = MessageEndpoint(self)
+        self.groups = GroupEndpoint(self)
 
     # authorization
     @property
@@ -119,7 +136,6 @@ class Yammer(object):
         else:
             suffix = ''
         url = '%s%s%s' % (self.base_url, endpoint, suffix)
-        print url
         body = None
         cleaned_params = dict([(k,v) for k,v in params.iteritems() if v])
 
