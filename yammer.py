@@ -20,45 +20,63 @@ class Endpoint(object):
 
 class MessageEndpoint(Endpoint):
 
-    def all(self, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages', older_than=older_than,
+    def _get_msgs(self, endpoint, raw, older_than, newer_than, threaded):
+        msgs = self._get(endpoint, older_than=older_than,
                          newer_than=newer_than, threaded=threaded)
+        if raw:
+            return msgs
+        else:
+            return msgs['messages']
 
-    def sent(self, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/sent', older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def all(self, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages', raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def received(self, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/received', older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def sent(self, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/sent', raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def following(self, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/following', older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def received(self, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/received', raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def from_user(self, id, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/from_user/%s' % id, older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def following(self, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/following', raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def from_bot(self, id, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/from_bot/%s' % id, older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def from_user(self, id, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/from_user/%s' % id, raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def tagged_with(self, id, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/tagged_with/%s' % id, older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def from_bot(self, id, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/from_bot/%s' % id, raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def in_group(self, id, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/in_group/%s' % id, older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def tagged_with(self, id, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/tagged_with/%s' % id, raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def favorites_of(self, id, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/favorites_of/%s' % id, older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def in_group(self, id, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/in_group/%s' % id, raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
-    def in_thread(self, id, older_than=None, newer_than=None, threaded=None):
-        return self._get('messages/in_thread/%s' % id, older_than=older_than,
-                         newer_than=newer_than, threaded=threaded)
+    def favorites_of(self, id, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/favorites_of/%s' % id, raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
+
+    def in_thread(self, id, raw=False, older_than=None, newer_than=None, threaded=None):
+        return self._get_msgs('messages/in_thread/%s' % id, raw=raw,
+                              older_than=older_than, newer_than=newer_than,
+                              threaded=threaded)
 
     def post(self, body, group_id=None, replied_to_id=None, direct_to_id=None):
         # doesn't support attachments
