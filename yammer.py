@@ -102,6 +102,21 @@ class GroupEndpoint(Endpoint):
     def update(self, id, name, private):
         return self._post('groups/%s' % id, name=name, private=private)
 
+class UserEndpoint(Endpoint):
+
+    def all(self, page=1, letter=None, sort_by=None, reverse=None):
+        return self._get('users', page=page, letter=letter, sort_by=sort_by,
+                         reverse=reverse)
+
+    def get(self, id):
+        return self._get('users/%s' % id)
+
+    def current(self):
+        return self._get('users/current')
+
+    def by_email(self, email):
+        return self._get('users/by_email', email=email)
+
 
 class Yammer(object):
     request_token_url = 'https://www.yammer.com/oauth/request_token'
@@ -120,6 +135,7 @@ class Yammer(object):
         # connect endpoints
         self.messages = MessageEndpoint(self)
         self.groups = GroupEndpoint(self)
+        self.users = UserEndpoint(self)
 
     # authorization
     @property
