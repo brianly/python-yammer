@@ -180,6 +180,9 @@ class Yammer(object):
                 body = None
 
         resp, content = self.client.request(url, method=method, body=body)
-        return json.loads(content)
+        try:
+            return json.loads(content)
+        except ValueError:
+            print resp, content
 
 
