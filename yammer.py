@@ -26,6 +26,8 @@ class MessageEndpoint(Endpoint):
         if raw:
             return msgs
         else:
+            if 'messages' not in msgs:
+                print msgs
             return msgs['messages']
 
     def all(self, raw=False, older_than=None, newer_than=None, threaded=None):
@@ -181,7 +183,10 @@ class Yammer(object):
 
         resp, content = self.client.request(url, method=method, body=body)
         try:
-            return json.loads(content)
+            json_obj = json.loads(content)
+            if 'response' in json_obj and json_obj['response'].get('stat', None) == 'fail':
+                raise Exception(json_obj['response']['message'])
+            return json_obj
         except ValueError:
             print resp, content
 

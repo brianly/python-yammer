@@ -21,5 +21,4 @@ python >= 2.4
 
 simplejson >= 1.8 (not required with python 2.6, will use built in json module)
 
-python-oauth > 1.1.1
-
+python-oauth2 >= 1.1.3
