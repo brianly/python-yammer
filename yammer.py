@@ -175,14 +175,14 @@ class Yammer(object):
         else:
             suffix = ''
         url = '%s%s%s' % (self.base_url, endpoint, suffix)
-        body = None
+        body = ''
         cleaned_params = dict([(k,v) for k,v in params.iteritems() if v])
 
         if cleaned_params:
             body = urllib.urlencode(cleaned_params)
             if method == 'GET':
                 url = '%s?%s' % (url, body)
-                body = None
+                body = ''
 
         resp, content = self.client.request(url, method=method, body=body)
         try:
