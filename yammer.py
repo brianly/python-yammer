@@ -122,6 +122,8 @@ class UserEndpoint(Endpoint):
     def by_email(self, email):
         return self._get('users/by_email', email=email)
 
+    def in_group(self, id, page=1):
+        return self._get('users/in_group/%s' % id, page=page)
 
 class Yammer(object):
     request_token_url = 'https://www.yammer.com/oauth/request_token'
